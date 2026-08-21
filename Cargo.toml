@@ -6,3 +6,5 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 dotenvy = "0.15.7"
+reqwest = { version = "0.13.4", features = ["blocking", "native-tls"] }
+tokio = "1.53.1"
