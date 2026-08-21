@@ -1,5 +1,5 @@
 use anyhow::Result;
-use icalendar::{Calendar, CalendarComponent, Component};
+use icalendar::{Calendar, CalendarDateTime, Component, DatePerhapsTime, Event};
 use reqwest::header::USER_AGENT;
 use std::env;
 
@@ -29,8 +29,16 @@ fn main() -> Result<()> {
     // Parse calendar
     let parsed_calendar: Calendar = result.parse().unwrap();
 
+    let current_time = chrono::Local::now().naive_local();
     for event in parsed_calendar.events() {
-        println!("Event: {}", event.get_summary().unwrap())
+        match event.get_start() {
+            Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone { date_time, tzid })) => {
+                if date_time > current_time {
+                    println!("{date_time}")
+                }
+            }
+            _ => {}
+        }
     }
     Ok(())
 }
