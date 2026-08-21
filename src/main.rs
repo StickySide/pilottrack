@@ -14,10 +14,7 @@ fn main() -> Result<()> {
     // Get .ics
     let client = reqwest::blocking::Client::builder().build()?;
 
-    println!(
-        "Sending request...\nU: {}\nP: {}\nURL: {}",
-        username, password, url
-    );
+    println!("Getting calendar...");
 
     let result = client
         .get(&url)
@@ -29,6 +26,7 @@ fn main() -> Result<()> {
     // Parse calendar
     let parsed_calendar: Calendar = result.parse().unwrap();
 
+    // Prints summary for next event
     println!(
         "{}",
         get_next_event(&parsed_calendar)
@@ -50,10 +48,10 @@ fn get_next_event(cal: &Calendar) -> Option<Event> {
 }
 
 fn is_complete(event: &Event) -> bool {
-    let current_time = chrono::Local::now().naive_utc();
+    let current_time = chrono::Local::now().naive_local();
     if let Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone { date_time, tzid })) =
         event.get_end()
-        && date_time < current_time
+        && date_time.and_utc() < current_time.and_utc()
     {
         return true;
     }
