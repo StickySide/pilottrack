@@ -29,16 +29,33 @@ fn main() -> Result<()> {
     // Parse calendar
     let parsed_calendar: Calendar = result.parse().unwrap();
 
-    let current_time = chrono::Local::now().naive_local();
-    for event in parsed_calendar.events() {
-        match event.get_start() {
-            Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone { date_time, tzid })) => {
-                if date_time > current_time {
-                    println!("{date_time}")
-                }
-            }
-            _ => {}
+    println!(
+        "{}",
+        get_next_event(&parsed_calendar)
+            .unwrap()
+            .get_summary()
+            .unwrap()
+    );
+
+    Ok(())
+}
+
+fn get_next_event(cal: &Calendar) -> Option<Event> {
+    for event in cal.events() {
+        if !is_complete(event) {
+            return Some(event.clone());
         }
     }
-    Ok(())
+    None
+}
+
+fn is_complete(event: &Event) -> bool {
+    let current_time = chrono::Local::now().naive_utc();
+    if let Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone { date_time, tzid })) =
+        event.get_end()
+        && date_time < current_time
+    {
+        return true;
+    }
+    false
 }
