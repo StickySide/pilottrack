@@ -5,8 +5,8 @@ use reqwest::header::USER_AGENT;
 use std::env;
 
 #[allow(dead_code)]
-struct Leg {
-    flight_number: String,
+struct FlightStatus {
+    flight_number: Option<String>,
     dep_time: NaiveDateTime,
     arr_time: NaiveDateTime,
     dep_icao: String,
@@ -17,21 +17,25 @@ fn main() -> Result<()> {
     // Read env from file
     dotenvy::dotenv().ok();
 
-    let username = env::var("USERNAME").context("Username not found")?;
+    let username = env::var("UNUMBER").context("Username not found")?;
     let password = env::var("PASSWORD").context("Password not found")?;
-    let url = env::var("URL")?;
+    let url = env::var("URL").context("URL not found")?;
+
+    dbg!(&username, &password, &url);
 
     // Get .ics
     let calendar = get_calendar(&url, &username, &password)?;
 
     // Parse calendar
-    let calendar: Calendar = calendar.parse().unwrap();
+    let calendar = calendar
+        .parse::<Calendar>()
+        .map_err(|e| anyhow::anyhow!("Failed to parse calendar: {e}"))?;
 
-    if let Some(event) = get_next_event(&calendar) {
-        println!("{}", get_flight_number(&event)?)
-    }
-    // let next_leg = Leg {
-    // };
+    let flight_number = if let Some(event) = get_next_event(&calendar) {
+        get_flight_number(&event).ok()
+    } else {
+        None
+    };
 
     Ok(())
 }
@@ -79,4 +83,18 @@ fn get_calendar(url: &str, username: &str, password: &str) -> Result<String> {
         .text()?;
 
     Ok(response)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn can_get_response() {
+        dotenvy::dotenv().ok();
+        let username = env::var("UNUMBER").context("Username not found").unwrap();
+        let password = env::var("PASSWORD").context("Password not found").unwrap();
+        let url = env::var("URL").context("URL not found").unwrap();
+        let cal = get_calendar(&url, &username, &password);
+        assert!(cal.is_ok())
+    }
 }
