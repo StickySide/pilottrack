@@ -7,10 +7,10 @@ use std::env;
 #[allow(dead_code)]
 struct FlightStatus {
     flight_number: Option<String>,
-    dep_time: NaiveDateTime,
-    arr_time: NaiveDateTime,
-    dep_icao: String,
-    arr_icao: String,
+    dep_time: Option<NaiveDateTime>,
+    arr_time: Option<NaiveDateTime>,
+    dep_icao: Option<String>,
+    arr_icao: Option<String>,
 }
 
 fn main() -> Result<()> {
@@ -31,29 +31,36 @@ fn main() -> Result<()> {
         .parse::<Calendar>()
         .map_err(|e| anyhow::anyhow!("Failed to parse calendar: {e}"))?;
 
+    // Get flight number
     let flight_number = if let Some(event) = get_next_event(&calendar) {
-        get_flight_number(&event).ok()
+        get_flight_number(&event)
     } else {
         None
     };
 
+    println!("{flight_number:?}");
+
     Ok(())
 }
 
-fn get_flight_number(event: &Event) -> Result<String> {
-    let flight_number = String::from("UAL")
-        + String::from(event.get_summary().unwrap())
-            .split(' ')
-            .next()
-            .unwrap();
+fn get_flight_number(event: &Event) -> Option<String> {
+    let flight_number = if let Some(summary) = event.get_summary() {
+        if let Some(number) = summary.split(' ').next() {
+            Some(String::from("UAL") + number)
+        } else {
+            return None;
+        }
+    } else {
+        return None;
+    };
 
-    Ok(flight_number)
+    flight_number
 }
 
-fn get_next_event(cal: &Calendar) -> Option<Event> {
+fn get_next_event(cal: &Calendar) -> Option<&Event> {
     for event in cal.events() {
         if !is_complete(event) {
-            return Some(event.clone());
+            return Some(event);
         }
     }
     None
