@@ -1,8 +1,9 @@
-use anyhow::{Context, Result};
+mod config;
+
+use anyhow::Result;
 use chrono::NaiveDateTime;
 use icalendar::{Calendar, CalendarDateTime, Component, DatePerhapsTime, Event};
 use reqwest::header::USER_AGENT;
-use std::env;
 
 #[allow(dead_code)]
 struct FlightStatus {
@@ -14,17 +15,11 @@ struct FlightStatus {
 }
 
 fn main() -> Result<()> {
-    // Read env from file
-    dotenvy::dotenv().ok();
-
-    let username = env::var("UNUMBER").context("Username not found")?;
-    let password = env::var("PASSWORD").context("Password not found")?;
-    let url = env::var("URL").context("URL not found")?;
-
-    dbg!(&username, &password, &url);
+    // Init config
+    let config = config::Config::from_env()?;
 
     // Get .ics
-    let calendar = get_calendar(&url, &username, &password)?;
+    let calendar = get_calendar(&config.url, &config.username, &config.password)?;
 
     // Parse calendar
     let calendar = calendar
@@ -90,18 +85,4 @@ fn get_calendar(url: &str, username: &str, password: &str) -> Result<String> {
         .text()?;
 
     Ok(response)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn can_get_response() {
-        dotenvy::dotenv().ok();
-        let username = env::var("UNUMBER").context("Username not found").unwrap();
-        let password = env::var("PASSWORD").context("Password not found").unwrap();
-        let url = env::var("URL").context("URL not found").unwrap();
-        let cal = get_calendar(&url, &username, &password);
-        assert!(cal.is_ok())
-    }
 }
