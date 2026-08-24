@@ -936,7 +936,6 @@ dependencies = [
  "dotenvy",
  "icalendar",
  "reqwest",
- "tokio",
 ]
 
 [[package]]

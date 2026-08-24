@@ -13,7 +13,7 @@ pub fn from_url(url: &str, username: &str, password: &str) -> Result<icalendar::
 
     let calendar = response
         .parse::<icalendar::Calendar>()
-        .map_err(|e| anyhow::anyhow!("Failed to parse calendar: {e}"))?;
+        .map_err(|e| anyhow::anyhow!("Failed to parse calendar from url: {e}"))?;
 
     Ok(calendar)
 }
@@ -53,3 +53,18 @@ fn is_complete(event: &Event) -> bool {
     }
     false
 }
+
+pub fn to_file(calendar: Calendar, filename: &String) -> std::io::Result<()> {
+    std::fs::write(filename, calendar.to_string())
+}
+
+pub fn from_file(filename: &String) -> Result<Calendar> {
+    let cal_string = std::fs::read_to_string(filename)?;
+    let calendar: Calendar = cal_string
+        .parse()
+        .map_err(|e| anyhow::anyhow!("Failed to parse calendar from file: {e}"))?;
+    Ok(calendar)
+}
+
+#[cfg(test)]
+mod tests {}

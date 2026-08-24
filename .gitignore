@@ -1,2 +1,7 @@
+
 /target
-.env
+*.env
+*.ics
+
+!/tests/fixtures/.env
+!/tests/fixtures/calendar.ics
