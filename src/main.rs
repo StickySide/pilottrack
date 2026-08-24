@@ -20,29 +20,20 @@ fn main() -> Result<()> {
     // Init config
     let config = config::Config::from_env()?;
 
-    // Get .ics calendar
+    // Get .ics calendar from url
     let calendar = calendar::from_url(&config.url, &config.username, &config.password)?;
 
+    // Save to file
     calendar::to_file(calendar, &filename)?;
 
+    // Load from file again!
     let calendar = calendar::from_file(&filename)?;
 
-    for event in calendar.events() {
-        println!("{}", event.get_summary().unwrap());
+    // Next lines just for testing purposes
+    let next_event = calendar::get_next_event(&calendar).unwrap();
 
-        match calendar::get_flight_number(event) {
-            Some(n) => println!("{n}"),
-            None => println!("Could not get flight number"),
-        }
-    }
-    // Get flight number
-    // let flight_number = if let Some(event) = calendar::get_next_event(&calendar) {
-    //     calendar::get_flight_number(&event)
-    // } else {
-    //     None
-    // };
-
-    // dbg!(flight_number);
+    println!("{}", next_event.get_summary().unwrap());
+    println!("{}", calendar::get_flight_number(next_event).unwrap());
 
     Ok(())
 }

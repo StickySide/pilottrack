@@ -1,5 +1,5 @@
 use anyhow::Result;
-use icalendar::{Calendar, CalendarDateTime, Component, DatePerhapsTime, Event};
+use icalendar::{Calendar, Component, DatePerhapsTime, Event};
 
 pub fn from_url(url: &str, username: &str, password: &str) -> Result<icalendar::Calendar> {
     let client = reqwest::blocking::Client::builder().build()?;
@@ -41,17 +41,15 @@ pub fn get_flight_number(event: &Event) -> Option<String> {
     flight_number
 }
 
+// todo: change return type to result or option
 fn is_complete(event: &Event) -> bool {
-    let current_time = chrono::Local::now().naive_local();
-    if let Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone {
-        date_time: dt,
-        tzid: _,
-    })) = event.get_end()
-        && dt.and_utc() < current_time.and_utc()
-    {
-        return true;
-    }
-    false
+    let current_time = chrono::Utc::now();
+    let end = match event.get_end() {
+        Some(DatePerhapsTime::DateTime(dt)) => dt.try_into_utc().unwrap(),
+        _ => return false,
+    };
+
+    current_time > end
 }
 
 pub fn to_file(calendar: Calendar, filename: &String) -> std::io::Result<()> {
@@ -62,7 +60,7 @@ pub fn from_file(filename: &String) -> Result<Calendar> {
     let cal_string = std::fs::read_to_string(filename)?;
     let calendar: Calendar = cal_string
         .parse()
-        .map_err(|e| anyhow::anyhow!("Failed to parse calendar from file: {e}"))?;
+        .map_err(|e| anyhow::anyhow!("Failed to parse icalendar from file: {e}"))?;
     Ok(calendar)
 }
 
@@ -78,6 +76,17 @@ mod tests {
             .summary("Test event")
             .starts(Utc::now() - Duration::hours(1))
             .ends(Utc::now() + Duration::hours(1))
+            .done();
+
+        assert!(!is_complete(&event));
+    }
+
+    #[test]
+    fn event_complete() {
+        let event = icalendar::Event::new()
+            .summary("Test event")
+            .starts(Utc::now() - Duration::hours(2))
+            .ends(Utc::now() - Duration::hours(1))
             .done();
 
         assert!(is_complete(&event));
