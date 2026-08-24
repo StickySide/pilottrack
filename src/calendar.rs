@@ -18,6 +18,7 @@ pub fn from_url(url: &str, username: &str, password: &str) -> Result<icalendar::
     Ok(calendar)
 }
 
+// todo: works only if ical events are in chronological order
 pub fn get_next_event(cal: &Calendar) -> Option<&Event> {
     for event in cal.events() {
         if !is_complete(event) {
@@ -27,18 +28,12 @@ pub fn get_next_event(cal: &Calendar) -> Option<&Event> {
     None
 }
 
+// todo: change return type to Result? Maybe?
 pub fn get_flight_number(event: &Event) -> Option<String> {
-    let flight_number = if let Some(summary) = event.get_summary() {
-        if let Some(number) = summary.split(' ').next() {
-            Some(String::from("UAL") + number)
-        } else {
-            return None;
-        }
-    } else {
-        return None;
-    };
+    let summary = event.get_summary()?;
+    let number = summary.split_whitespace().next()?;
 
-    flight_number
+    Some(format!("UAL{number}"))
 }
 
 // todo: change return type to result or option
@@ -90,5 +85,15 @@ mod tests {
             .done();
 
         assert!(is_complete(&event));
+    }
+
+    #[test]
+    fn parse_flight_number() {
+        let event = icalendar::Event::new()
+            .summary("1234 EWR 08Sep 08:00 - SFO 08Sep 10:58")
+            .done();
+
+        let flight_number = get_flight_number(&event);
+        assert_eq!(flight_number, Some(String::from("UAL1234")))
     }
 }
