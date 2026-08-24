@@ -67,4 +67,19 @@ pub fn from_file(filename: &String) -> Result<Calendar> {
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::*;
+    use chrono::{Duration, Utc};
+    use icalendar::{Component, EventLike};
+
+    #[test]
+    fn event_not_complete() {
+        let event = icalendar::Event::new()
+            .summary("Test event")
+            .starts(Utc::now() - Duration::hours(1))
+            .ends(Utc::now() + Duration::hours(1))
+            .done();
+
+        assert!(is_complete(&event));
+    }
+}
