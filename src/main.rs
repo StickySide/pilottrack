@@ -53,5 +53,6 @@ fn main() -> Result<()> {
     // Display flight stats
 
     println!("{flight_stats}");
+
     Ok(())
 }

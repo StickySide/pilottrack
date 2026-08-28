@@ -5,6 +5,7 @@ use serde_json::Value;
 
 #[derive(Default, Debug)]
 pub struct FlightStats {
+    pub error: bool,
     carrier_name: Option<String>,
     flight_number: Option<String>,
     status: Option<String>,
@@ -13,6 +14,11 @@ pub struct FlightStats {
 impl Display for FlightStats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let u = &"Unavailable";
+
+        if self.error == true {
+            let result = write!(f, "Error getting flight data");
+            return result;
+        }
 
         write!(
             f,
@@ -73,10 +79,16 @@ pub fn parse(data: String) -> anyhow::Result<FlightStats> {
         _ => None,
     };
 
+    let error = match data["error"] {
+        Value::Null => false,
+        _ => true,
+    };
+
     let stats = FlightStats {
         carrier_name,
         flight_number,
         status,
+        error,
     };
 
     Ok(stats)
@@ -94,6 +106,7 @@ mod tests {
             carrier_name: Some(String::from("United Airlines")),
             flight_number: Some(String::from("1469")),
             status: Some(String::from("Departed")),
+            error: false,
         };
         assert_eq!(stats.carrier_name, test_stats.carrier_name);
         assert_eq!(stats.flight_number, test_stats.flight_number);
