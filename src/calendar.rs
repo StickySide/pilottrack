@@ -23,14 +23,10 @@ pub fn from_url(url: &str, username: &str, password: &str) -> Result<icalendar::
     Ok(calendar)
 }
 
-// todo: works only if ical events are in chronological order
 pub fn get_next_event(cal: &Calendar) -> Option<&Event> {
-    for event in cal.events() {
-        if !is_complete(event) {
-            return Some(event);
-        }
-    }
-    None
+    cal.events()
+        .filter(|event| !is_complete(event))
+        .min_by_key(|event| get_start_ndt(event))
 }
 
 // todo: change return type to Result? Maybe?
@@ -41,15 +37,14 @@ pub fn get_flight_number(event: &Event) -> Option<String> {
     Some(String::from(number))
 }
 
-pub fn get_start_ndt(event: &Event) -> anyhow::Result<NaiveDateTime> {
+// todo: should this be a result?
+pub fn get_start_ndt(event: &Event) -> Option<NaiveDateTime> {
     match event.get_start() {
         Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone {
             date_time: dt,
             tzid: _,
-        })) => Ok(dt),
-        _ => Err(anyhow::anyhow!(
-            "Couldnt get naive date time start time with from event"
-        )),
+        })) => Some(dt),
+        _ => None,
     }
 }
 

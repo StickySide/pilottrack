@@ -32,7 +32,6 @@ fn main() -> Result<()> {
 
     dbg!(&calendar);
 
-    // Next lines just for testing purposes
     let next_event =
         calendar::get_next_event(&calendar).ok_or(anyhow::anyhow!("Next event was empty"))?;
 
@@ -43,7 +42,7 @@ fn main() -> Result<()> {
 
     dbg!(&flight_number);
 
-    let start_time = calendar::get_start_ndt(next_event)?;
+    let start_time = calendar::get_start_ndt(next_event).unwrap();
 
     let flight_stat_data = flightstats::from_url(start_time, flight_number)?;
 
