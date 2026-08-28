@@ -1,5 +1,10 @@
 use anyhow::Result;
-use icalendar::{Calendar, Component, DatePerhapsTime, Event};
+use chrono::{Date, NaiveDateTime, TimeZone};
+use icalendar::{
+    Calendar,
+    CalendarDateTime::{self, WithTimezone},
+    Component, DatePerhapsTime, Event,
+};
 
 pub fn from_url(url: &str, username: &str, password: &str) -> Result<icalendar::Calendar> {
     let client = reqwest::blocking::Client::builder().build()?;
@@ -33,7 +38,19 @@ pub fn get_flight_number(event: &Event) -> Option<String> {
     let summary = event.get_summary()?;
     let number = summary.split_whitespace().next()?;
 
-    Some(format!("UAL{number}"))
+    Some(String::from(number))
+}
+
+pub fn get_start_ndt(event: &Event) -> anyhow::Result<NaiveDateTime> {
+    match event.get_start() {
+        Some(DatePerhapsTime::DateTime(CalendarDateTime::WithTimezone {
+            date_time: dt,
+            tzid: _,
+        })) => Ok(dt),
+        _ => Err(anyhow::anyhow!(
+            "Couldnt get naive date time start time with from event"
+        )),
+    }
 }
 
 // todo: change return type to result or option
@@ -61,6 +78,7 @@ pub fn from_file(filename: &String) -> Result<Calendar> {
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
     use chrono::{Duration, Utc};
     use icalendar::{Component, EventLike};
@@ -94,6 +112,18 @@ mod tests {
             .done();
 
         let flight_number = get_flight_number(&event);
-        assert_eq!(flight_number, Some(String::from("UAL1234")))
+        assert_eq!(flight_number, Some(String::from("1234")))
+    }
+
+    #[test]
+    fn get_ndt() {
+        let calendar = from_file(&"tests/fixtures/calendar.ics".to_string()).unwrap();
+        let next_event = get_next_event(&calendar).unwrap();
+        let dt = get_start_ndt(next_event).unwrap();
+        let test_dt = chrono::NaiveDate::from_ymd_opt(2026, 08, 23)
+            .unwrap()
+            .and_hms_opt(19, 35, 22)
+            .unwrap();
+        assert_eq!(dt, test_dt);
     }
 }

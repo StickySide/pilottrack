@@ -9,3 +9,5 @@ chrono = "0.4.45"
 dotenvy = "0.15.7"
 icalendar = { version = "0.17.13", features = ["chrono-tz", "time"] }
 reqwest = { version = "0.13.4", features = ["blocking", "native-tls"] }
+serde = { version = "1.0.229", features = ["serde_derive"] }
+serde_json = "1.0.151"

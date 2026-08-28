@@ -2,6 +2,8 @@
 /target
 *.env
 *.ics
+*.json
 
 !/tests/fixtures/.env
 !/tests/fixtures/calendar.ics
+!/tests/fixtures/test_flight_stats.json
