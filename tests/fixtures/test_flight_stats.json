@@ -1,0 +1,794 @@
+{
+    "data": {
+        "flightId": 1404893533,
+        "flightNote": {
+            "final": false,
+            "canceled": false,
+            "hasDepartedGate": true,
+            "hasDepartedRunway": true,
+            "landed": false,
+            "message": null,
+            "messageCode": null,
+            "pastExpectedTakeOff": true,
+            "tracking": true,
+            "hasPositions": true,
+            "trackingUnavailable": false,
+            "phase": "Climbing",
+            "hasActualRunwayDepartureTime": true,
+            "hasActualGateDepartureTime": true
+        },
+        "isTracking": true,
+        "isLanded": false,
+        "isScheduled": false,
+        "sortTime": "2026-08-28T15:45:00.000Z",
+        "schedule": {
+            "scheduledDeparture": "2026-08-28T08:45:00.000",
+            "scheduledDepartureUTC": "2026-08-28T15:45:00.000Z",
+            "estimatedActualDepartureRunway": false,
+            "estimatedActualDepartureTitle": "Actual",
+            "estimatedActualDeparture": "2026-08-28T08:43:00.000",
+            "estimatedActualDepartureUTC": "2026-08-28T15:43:00.000Z",
+            "scheduledArrival": "2026-08-28T12:36:00.000",
+            "scheduledArrivalUTC": "2026-08-28T18:36:00.000Z",
+            "estimatedActualArrivalRunway": false,
+            "estimatedActualArrivalTitle": "Estimated",
+            "estimatedActualArrival": "2026-08-28T12:50:00.000",
+            "estimatedActualArrivalUTC": "2026-08-28T18:50:00.000Z",
+            "graphXAxis": {
+                "dep": "2026-08-28T08:43:00.000",
+                "depUTC": "2026-08-28T15:43:00.000Z",
+                "arr": "2026-08-28T12:50:00.000",
+                "arrUTC": "2026-08-28T18:50:00.000Z"
+            },
+            "tookOff": "2026-08-28T08:43:00.000"
+        },
+        "status": {
+            "statusCode": "A",
+            "status": "Departed",
+            "color": "green",
+            "statusDescription": "On time",
+            "delay": {
+                "departure": {
+                    "minutes": 0
+                },
+                "arrival": {
+                    "minutes": 14
+                }
+            },
+            "delayStatus": {
+                "wording": "On time",
+                "minutes": 14
+            },
+            "lastUpdatedText": "Status Last Updated 30 Minutes Ago",
+            "diverted": false
+        },
+        "resultHeader": {
+            "statusDescription": "On time",
+            "carrier": {
+                "name": "United Airlines",
+                "fs": "UA"
+            },
+            "flightNumber": "1469",
+            "status": "Departed",
+            "diverted": false,
+            "color": "green",
+            "departureAirportFS": "SFO",
+            "arrivalAirportFS": "DEN",
+            "divertedAirport": null
+        },
+        "ticketHeader": {
+            "carrier": {
+                "name": "United Airlines",
+                "fs": "UA"
+            },
+            "flightNumber": "1469"
+        },
+        "operatedBy": null,
+        "departureAirport": {
+            "fs": "SFO",
+            "iata": "SFO",
+            "name": "San Francisco International Airport",
+            "city": "San Francisco",
+            "state": "CA",
+            "country": "US",
+            "timeZoneRegionName": "America/Los_Angeles",
+            "regionName": "North America",
+            "gate": "F14",
+            "terminal": "3",
+            "times": {
+                "scheduled": {
+                    "time": "8:45",
+                    "ampm": "AM",
+                    "time24": "08:45",
+                    "timezone": "PDT"
+                },
+                "estimatedActual": {
+                    "title": "Actual",
+                    "time": "8:43",
+                    "ampm": "AM",
+                    "time24": "08:43",
+                    "runway": false,
+                    "timezone": "PDT"
+                }
+            },
+            "date": "2026-08-28T08:45:00.000"
+        },
+        "arrivalAirport": {
+            "fs": "DEN",
+            "iata": "DEN",
+            "name": "Denver International Airport",
+            "city": "Denver",
+            "state": "CO",
+            "country": "US",
+            "timeZoneRegionName": "America/Denver",
+            "regionName": "North America",
+            "gate": "B22",
+            "terminal": null,
+            "baggage": "14",
+            "times": {
+                "scheduled": {
+                    "time": "12:36",
+                    "ampm": "PM",
+                    "time24": "12:36",
+                    "timezone": "MDT"
+                },
+                "estimatedActual": {
+                    "title": "Estimated",
+                    "time": "12:50",
+                    "ampm": "PM",
+                    "time24": "12:50",
+                    "runway": false,
+                    "timezone": "MDT"
+                }
+            },
+            "date": "2026-08-28T12:36:00.000"
+        },
+        "divertedAirport": null,
+        "additionalFlightInfo": {
+            "equipment": {
+                "iata": "75T",
+                "name": "Boeing 757-300 (winglets) Passenger",
+                "title": "Actual"
+            },
+            "flightDuration": "2h 51m"
+        },
+        "codeshares": [
+            {
+                "fs": "AC",
+                "name": "Air Canada",
+                "flightNumber": "4047"
+            },
+            {
+                "fs": "NZ",
+                "name": "Air New Zealand",
+                "flightNumber": "9058"
+            },
+            {
+                "fs": "VA",
+                "name": "Virgin Australia",
+                "flightNumber": "8342"
+            }
+        ],
+        "positional": {
+            "departureAirportCode": "SFO",
+            "arrivalAirportCode": "DEN",
+            "divertedAirportCode": null,
+            "flexFlightStatus": "A",
+            "flexTrack": {
+                "flightId": 1404893533,
+                "carrierFsCode": "UA",
+                "flightNumber": "1469",
+                "tailNumber": "N57868",
+                "callsign": "UAL1469",
+                "departureAirportFsCode": "SFO",
+                "arrivalAirportFsCode": "DEN",
+                "departureDate": {
+                    "dateUtc": "2026-08-28T15:45:00.000Z",
+                    "dateLocal": "2026-08-28T08:45:00.000"
+                },
+                "equipment": "75T",
+                "delayMinutes": 14,
+                "bearing": 77.65966270386416,
+                "heading": 79.97193699221351,
+                "positions": [
+                    {
+                        "lon": -118.771489,
+                        "lat": 38.328828,
+                        "speedMph": 579,
+                        "altitudeFt": 35203,
+                        "source": "derived",
+                        "date": "2026-08-28T17:03:10.340Z",
+                        "course": 80,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T17:07:47.000Z"
+                    },
+                    {
+                        "lon": -118.961931,
+                        "lat": 38.302858,
+                        "speedMph": 582,
+                        "altitudeFt": 35015,
+                        "source": "derived",
+                        "date": "2026-08-28T17:02:05.255Z",
+                        "course": 80,
+                        "vrateMps": 4,
+                        "lastObserved": "2026-08-28T17:06:47.000Z"
+                    },
+                    {
+                        "lon": -119.152912,
+                        "lat": 38.276738,
+                        "speedMph": 583,
+                        "altitudeFt": 34556,
+                        "source": "derived",
+                        "date": "2026-08-28T17:00:59.529Z",
+                        "course": 79,
+                        "vrateMps": 5,
+                        "lastObserved": "2026-08-28T17:05:47.000Z"
+                    },
+                    {
+                        "lon": -119.346735,
+                        "lat": 38.249791,
+                        "speedMph": 581,
+                        "altitudeFt": 33709,
+                        "source": "derived",
+                        "date": "2026-08-28T16:59:54.173Z",
+                        "course": 79,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T17:04:18.000Z"
+                    },
+                    {
+                        "lon": -119.543798,
+                        "lat": 38.22145,
+                        "speedMph": 584,
+                        "altitudeFt": 32449,
+                        "source": "derived",
+                        "date": "2026-08-28T16:58:47.300Z",
+                        "course": 79,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T17:03:18.000Z"
+                    },
+                    {
+                        "lon": -119.729459,
+                        "lat": 38.196912,
+                        "speedMph": 591,
+                        "altitudeFt": 31357,
+                        "source": "derived",
+                        "date": "2026-08-28T16:57:43.602Z",
+                        "course": 78,
+                        "vrateMps": 7,
+                        "lastObserved": "2026-08-28T17:02:18.000Z"
+                    },
+                    {
+                        "lon": -119.933528,
+                        "lat": 38.165223,
+                        "speedMph": 600,
+                        "altitudeFt": 29783,
+                        "source": "derived",
+                        "date": "2026-08-28T16:56:34.861Z",
+                        "course": 77,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T17:00:47.000Z"
+                    },
+                    {
+                        "lon": -120.130935,
+                        "lat": 38.131991,
+                        "speedMph": 601,
+                        "altitudeFt": 28324,
+                        "source": "derived",
+                        "date": "2026-08-28T16:55:29.278Z",
+                        "course": 79,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:59:46.000Z"
+                    },
+                    {
+                        "lon": -120.319736,
+                        "lat": 38.104845,
+                        "speedMph": 591,
+                        "altitudeFt": 27067,
+                        "source": "derived",
+                        "date": "2026-08-28T16:54:25.502Z",
+                        "course": 1,
+                        "vrateMps": 5,
+                        "lastObserved": "2026-08-28T16:58:46.000Z"
+                    },
+                    {
+                        "lon": -120.516181,
+                        "lat": 38.092553,
+                        "speedMph": 581,
+                        "altitudeFt": 26073,
+                        "source": "derived",
+                        "date": "2026-08-28T16:53:21.575Z",
+                        "course": 77,
+                        "vrateMps": 8,
+                        "lastObserved": "2026-08-28T16:57:46.000Z"
+                    },
+                    {
+                        "lon": -120.707595,
+                        "lat": 38.057279,
+                        "speedMph": 589,
+                        "altitudeFt": 24430,
+                        "source": "derived",
+                        "date": "2026-08-28T16:52:15.807Z",
+                        "course": 83,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:56:46.000Z"
+                    },
+                    {
+                        "lon": -120.882096,
+                        "lat": 38.025202,
+                        "speedMph": 566,
+                        "altitudeFt": 23418,
+                        "source": "derived",
+                        "date": "2026-08-28T16:51:12.585Z",
+                        "course": 80,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:55:46.000Z"
+                    },
+                    {
+                        "lon": -119.775182,
+                        "lat": 38.181396,
+                        "speedMph": 591,
+                        "altitudeFt": 22683,
+                        "source": "derived",
+                        "date": "2026-08-28T16:50:03.406Z",
+                        "course": 1,
+                        "vrateMps": 5,
+                        "lastObserved": "2026-08-28T16:54:46.000Z"
+                    },
+                    {
+                        "lon": -121.322921,
+                        "lat": 38.375819,
+                        "speedMph": 331,
+                        "altitudeFt": 13468,
+                        "source": "derived",
+                        "date": "2026-08-28T16:49:01.718Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:53:46.000Z"
+                    },
+                    {
+                        "lon": -121.361925,
+                        "lat": 37.945184,
+                        "speedMph": 507,
+                        "altitudeFt": 19735,
+                        "source": "derived",
+                        "date": "2026-08-28T16:48:16.609Z",
+                        "course": 77,
+                        "vrateMps": 8,
+                        "lastObserved": "2026-08-28T16:52:17.000Z"
+                    },
+                    {
+                        "lon": -121.524552,
+                        "lat": 37.912251,
+                        "speedMph": 489,
+                        "altitudeFt": 18049,
+                        "source": "derived",
+                        "date": "2026-08-28T16:47:10.564Z",
+                        "course": 81,
+                        "vrateMps": 9,
+                        "lastObserved": "2026-08-28T16:51:17.000Z"
+                    },
+                    {
+                        "lon": -121.684547,
+                        "lat": 37.88759,
+                        "speedMph": 468,
+                        "altitudeFt": 16347,
+                        "source": "derived",
+                        "date": "2026-08-28T16:46:03.438Z",
+                        "course": 77,
+                        "vrateMps": 10,
+                        "lastObserved": "2026-08-28T16:50:16.000Z"
+                    },
+                    {
+                        "lon": -121.827485,
+                        "lat": 37.861352,
+                        "speedMph": 451,
+                        "altitudeFt": 14402,
+                        "source": "derived",
+                        "date": "2026-08-28T16:44:56.941Z",
+                        "course": 72,
+                        "vrateMps": 10,
+                        "lastObserved": "2026-08-28T16:49:16.000Z"
+                    },
+                    {
+                        "lon": -121.971858,
+                        "lat": 37.826092,
+                        "speedMph": 401,
+                        "altitudeFt": 12283,
+                        "source": "derived",
+                        "date": "2026-08-28T16:43:48.972Z",
+                        "course": 61,
+                        "vrateMps": 10,
+                        "lastObserved": "2026-08-28T16:48:16.000Z"
+                    },
+                    {
+                        "lon": -122.093357,
+                        "lat": 37.780762,
+                        "speedMph": 383,
+                        "altitudeFt": 10315,
+                        "source": "derived",
+                        "date": "2026-08-28T16:42:41.449Z",
+                        "course": 62,
+                        "vrateMps": 11,
+                        "lastObserved": "2026-08-28T16:47:16.000Z"
+                    },
+                    {
+                        "lon": -122.202543,
+                        "lat": 37.732933,
+                        "speedMph": 347,
+                        "altitudeFt": 7890,
+                        "source": "derived",
+                        "date": "2026-08-28T16:41:31.360Z",
+                        "course": 67,
+                        "vrateMps": 11,
+                        "lastObserved": "2026-08-28T16:45:16.000Z"
+                    },
+                    {
+                        "lon": -122.29731,
+                        "lat": 37.700242,
+                        "speedMph": 309,
+                        "altitudeFt": 5446,
+                        "source": "derived",
+                        "date": "2026-08-28T16:40:26.695Z",
+                        "course": 72,
+                        "vrateMps": 10,
+                        "lastObserved": "2026-08-28T16:44:16.000Z"
+                    },
+                    {
+                        "lon": -122.379487,
+                        "lat": 37.675796,
+                        "speedMph": 213,
+                        "altitudeFt": 3265,
+                        "source": "derived",
+                        "date": "2026-08-28T16:39:22.006Z",
+                        "course": 58,
+                        "vrateMps": 9,
+                        "lastObserved": "2026-08-28T16:43:16.000Z"
+                    },
+                    {
+                        "lon": -122.230773,
+                        "lat": 37.709619,
+                        "speedMph": 192,
+                        "altitudeFt": 2064,
+                        "source": "derived",
+                        "date": "2026-08-28T16:38:16.490Z",
+                        "course": 58,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:42:16.000Z"
+                    },
+                    {
+                        "lon": -122.398215,
+                        "lat": 37.587787,
+                        "speedMph": 207,
+                        "altitudeFt": 0,
+                        "source": "derived",
+                        "date": "2026-08-28T16:37:08.241Z",
+                        "course": -27,
+                        "vrateMps": 10,
+                        "lastObserved": "2026-08-28T16:41:16.000Z"
+                    },
+                    {
+                        "lon": -122.237334,
+                        "lat": 37.454944,
+                        "speedMph": 604,
+                        "altitudeFt": 11,
+                        "source": "derived",
+                        "date": "2026-08-28T16:35:57.002Z",
+                        "course": -47,
+                        "vrateMps": 9,
+                        "lastObserved": "2026-08-28T16:40:16.000Z"
+                    },
+                    {
+                        "lon": -119.74741,
+                        "lat": 39.334521,
+                        "speedMph": 550,
+                        "altitudeFt": 30317,
+                        "source": "derived",
+                        "date": "2026-08-28T16:34:54.722Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:39:15.000Z"
+                    },
+                    {
+                        "lon": -119.913194,
+                        "lat": 39.237387,
+                        "speedMph": 531,
+                        "altitudeFt": 28898,
+                        "source": "derived",
+                        "date": "2026-08-28T16:33:40.720Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:38:15.000Z"
+                    },
+                    {
+                        "lon": -119.931715,
+                        "lat": 39.226505,
+                        "speedMph": 529,
+                        "altitudeFt": 28736,
+                        "source": "derived",
+                        "date": "2026-08-28T16:33:32.280Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:38:02.000Z"
+                    },
+                    {
+                        "lon": -120.04854,
+                        "lat": 39.157712,
+                        "speedMph": 516,
+                        "altitudeFt": 27698,
+                        "source": "derived",
+                        "date": "2026-08-28T16:32:38.188Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.19077,
+                        "lat": 39.073438,
+                        "speedMph": 499,
+                        "altitudeFt": 26393,
+                        "source": "derived",
+                        "date": "2026-08-28T16:31:30.165Z",
+                        "course": 52,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.332161,
+                        "lat": 38.98705,
+                        "speedMph": 481,
+                        "altitudeFt": 25035,
+                        "source": "derived",
+                        "date": "2026-08-28T16:30:19.290Z",
+                        "course": 52,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.463636,
+                        "lat": 38.906378,
+                        "speedMph": 464,
+                        "altitudeFt": 23723,
+                        "source": "derived",
+                        "date": "2026-08-28T16:29:10.812Z",
+                        "course": 52,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.584471,
+                        "lat": 38.831942,
+                        "speedMph": 448,
+                        "altitudeFt": 22470,
+                        "source": "derived",
+                        "date": "2026-08-28T16:28:05.440Z",
+                        "course": 52,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.710905,
+                        "lat": 38.758095,
+                        "speedMph": 431,
+                        "altitudeFt": 21136,
+                        "source": "derived",
+                        "date": "2026-08-28T16:26:55.765Z",
+                        "course": 54,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.834555,
+                        "lat": 38.681689,
+                        "speedMph": 413,
+                        "altitudeFt": 19745,
+                        "source": "derived",
+                        "date": "2026-08-28T16:25:43.178Z",
+                        "course": 54,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -120.933134,
+                        "lat": 38.621251,
+                        "speedMph": 398,
+                        "altitudeFt": 18594,
+                        "source": "derived",
+                        "date": "2026-08-28T16:24:43.100Z",
+                        "course": 50,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.036271,
+                        "lat": 38.555601,
+                        "speedMph": 381,
+                        "altitudeFt": 17323,
+                        "source": "derived",
+                        "date": "2026-08-28T16:23:36.750Z",
+                        "course": 51,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.13965,
+                        "lat": 38.490223,
+                        "speedMph": 364,
+                        "altitudeFt": 15993,
+                        "source": "derived",
+                        "date": "2026-08-28T16:22:27.381Z",
+                        "course": 51,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.234676,
+                        "lat": 38.427279,
+                        "speedMph": 347,
+                        "altitudeFt": 14678,
+                        "source": "derived",
+                        "date": "2026-08-28T16:21:18.746Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.330839,
+                        "lat": 38.371195,
+                        "speedMph": 330,
+                        "altitudeFt": 13356,
+                        "source": "derived",
+                        "date": "2026-08-28T16:20:09.745Z",
+                        "course": 53,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.421114,
+                        "lat": 38.318492,
+                        "speedMph": 313,
+                        "altitudeFt": 12045,
+                        "source": "derived",
+                        "date": "2026-08-28T16:19:01.312Z",
+                        "course": 49,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.501632,
+                        "lat": 38.262736,
+                        "speedMph": 296,
+                        "altitudeFt": 10726,
+                        "source": "derived",
+                        "date": "2026-08-28T16:17:52.467Z",
+                        "course": 49,
+                        "vrateMps": 6,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.567854,
+                        "lat": 38.218465,
+                        "speedMph": 284,
+                        "altitudeFt": 9772,
+                        "source": "derived",
+                        "date": "2026-08-28T16:16:51.717Z",
+                        "course": 43,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.640281,
+                        "lat": 38.166499,
+                        "speedMph": 276,
+                        "altitudeFt": 9087,
+                        "source": "derived",
+                        "date": "2026-08-28T16:15:43.092Z",
+                        "course": 50,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.714202,
+                        "lat": 38.117206,
+                        "speedMph": 267,
+                        "altitudeFt": 8390,
+                        "source": "derived",
+                        "date": "2026-08-28T16:14:33.272Z",
+                        "course": 50,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.783203,
+                        "lat": 38.071756,
+                        "speedMph": 259,
+                        "altitudeFt": 7722,
+                        "source": "derived",
+                        "date": "2026-08-28T16:13:26.406Z",
+                        "course": 52,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.849998,
+                        "lat": 38.027684,
+                        "speedMph": 251,
+                        "altitudeFt": 7046,
+                        "source": "derived",
+                        "date": "2026-08-28T16:12:18.759Z",
+                        "course": 0,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.911105,
+                        "lat": 37.981866,
+                        "speedMph": 243,
+                        "altitudeFt": 6352,
+                        "source": "derived",
+                        "date": "2026-08-28T16:11:09.253Z",
+                        "course": 52,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -121.977562,
+                        "lat": 37.940313,
+                        "speedMph": 235,
+                        "altitudeFt": 5656,
+                        "source": "derived",
+                        "date": "2026-08-28T16:09:59.672Z",
+                        "course": 52,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -122.043638,
+                        "lat": 37.897584,
+                        "speedMph": 226,
+                        "altitudeFt": 4930,
+                        "source": "derived",
+                        "date": "2026-08-28T16:08:46.967Z",
+                        "course": 50,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -122.093058,
+                        "lat": 37.853118,
+                        "speedMph": 218,
+                        "altitudeFt": 4263,
+                        "source": "derived",
+                        "date": "2026-08-28T16:07:40.170Z",
+                        "course": 34,
+                        "vrateMps": 3,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -122.379997,
+                        "lat": 37.619999,
+                        "speedMph": 168,
+                        "altitudeFt": 11,
+                        "source": "derived",
+                        "date": "2026-08-28T16:07:00.000Z",
+                        "course": 0,
+                        "vrateMps": 0,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    },
+                    {
+                        "lon": -122.389054,
+                        "lat": 37.619064,
+                        "speedMph": 0,
+                        "altitudeFt": 11,
+                        "source": "derived",
+                        "date": "2026-08-28T16:03:12.000Z",
+                        "course": 326,
+                        "lastObserved": "2026-08-28T16:03:12.000Z"
+                    }
+                ],
+                "irregularOperations": [],
+                "fleetAircraftId": 230944
+            }
+        },
+        "flightState": "en-route"
+    }
+}
