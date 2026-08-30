@@ -55,24 +55,34 @@ pub fn get_live_update(
         _ => None,
     };
 
-    let estimated_departure = match chrono::DateTime::parse_from_rfc3339(
-        &data["data"]["schedule"]["estimatedActualDeparture"].to_string(),
-    ) {
-        Ok(dt) => Some(dt.naive_local()),
-        Err(e) => {
-            eprintln!("Could not parse estimated_departure: {e}");
-            None
-        }
+    dbg!(
+        &data["data"]["schedule"]["estimatedActualDeparture"]
+            .as_str()
+            .unwrap()
+    );
+
+    let time_fmt = "%Y-%m-%dT%H:%M:%S%.f";
+
+    let estimated_departure = match &data["data"]["schedule"]["estimatedActualDeparture"].as_str() {
+        Some(s) => match chrono::NaiveDateTime::parse_from_str(s, time_fmt) {
+            Ok(dt) => Some(dt),
+            Err(e) => {
+                eprintln!("Unable to parse estimated_departure into DateTime: {e}");
+                None
+            }
+        },
+        None => None,
     };
 
-    let estimated_arrival = match chrono::DateTime::parse_from_rfc3339(
-        &data["data"]["schedule"]["estimatedActualArrival"].to_string(),
-    ) {
-        Ok(dt) => Some(dt.naive_local()),
-        Err(e) => {
-            eprintln!("Could not parse estimated_arrival: {e}");
-            None
-        }
+    let estimated_arrival = match &data["data"]["schedule"]["estimatedActualArrival"].as_str() {
+        Some(s) => match chrono::NaiveDateTime::parse_from_str(s, time_fmt) {
+            Ok(dt) => Some(dt),
+            Err(e) => {
+                eprintln!("Unable to parse estimated_arrival into DateTime: {e}");
+                None
+            }
+        },
+        None => None,
     };
 
     Ok(LiveUpdate {
@@ -80,37 +90,36 @@ pub fn get_live_update(
         estimated_departure,
         estimated_arrival,
     })
-
-    // pub fn parse(data: String) -> anyhow::Result<FlightStats> {
-    //     let data: serde_json::Value = serde_json::from_str(&data)?;
-
-    //     let carrier_name: Option<String> = match data["data"]["resultHeader"]["carrier"]["name"].clone()
-    //     {
-    //         Value::String(x) => Some(x),
-    //         _ => None,
-    //     };
-
-    //     let flight_number = match data["data"]["resultHeader"]["flightNumber"].clone() {
-    //         Value::String(x) => Some(x),
-    //         _ => None,
-    //     };
-
-    //     let status = match data["data"]["status"]["status"].clone() {
-    //         Value::String(x) => Some(x),
-    //         _ => None,
-    //     };
-
-    //     let error = match data["error"] {
-    //         Value::Null => false,
-    //         _ => true,
-    //     };
-
-    //     let stats = FlightStats {
-    //         carrier_name,
-    //         flight_number,
-    //         status,
-    //         error,
-    //     };
-
-    //     Ok(stats)
 }
+// pub fn parse(data: String) -> anyhow::Result<FlightStats> {
+//     let data: serde_json::Value = serde_json::from_str(&data)?;
+
+//     let carrier_name: Option<String> = match data["data"]["resultHeader"]["carrier"]["name"].clone()
+//     {
+//         Value::String(x) => Some(x),
+//         _ => None,
+//     };
+
+//     let flight_number = match data["data"]["resultHeader"]["flightNumber"].clone() {
+//         Value::String(x) => Some(x),
+//         _ => None,
+//     };
+
+//     let status = match data["data"]["status"]["status"].clone() {
+//         Value::String(x) => Some(x),
+//         _ => None,
+//     };
+
+//     let error = match data["error"] {
+//         Value::Null => false,
+//         _ => true,
+//     };
+
+//     let stats = FlightStats {
+//         carrier_name,
+//         flight_number,
+//         status,
+//         error,
+//     };
+
+//     Ok(stats)

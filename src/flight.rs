@@ -22,13 +22,6 @@ impl Flight {
         self.estimated_departure = lu.estimated_departure;
         self.estimated_arrival = lu.estimated_arrival;
     }
-
-    pub fn callsign(&self) -> Option<String> {
-        match &self.flight_number {
-            Some(n) => Some(format!("UAL{n}")),
-            None => None,
-        }
-    }
 }
 
 impl Display for Flight {
@@ -38,7 +31,7 @@ impl Display for Flight {
         write!(
             f,
             "Flight #: {}\nPlanned Route: {} -> {}\nScheduled departure: {}\nScheduled Arrival: {}\n\
-            Status: {}\nEstimated deptarture: {}\nEstimated arrival: {}",
+            Status: {}\nEstimated departure: {}\nEstimated arrival: {}",
             self.flight_number.clone().unwrap_or(u.to_string()),
             self.departure.clone().unwrap_or(u.to_owned()),
             self.arrival.clone().unwrap_or(u.to_owned()),
@@ -49,7 +42,7 @@ impl Display for Flight {
             self.status.clone().unwrap_or(u.to_owned()),
             self.estimated_departure
                 .map_or(u.to_owned(), |d| d.to_string()),
-            self.scheduled_arrival
+            self.estimated_arrival
                 .map_or(u.to_owned(), |d| d.to_string()),
         )
     }
