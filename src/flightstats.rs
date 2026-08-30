@@ -35,6 +35,17 @@ pub fn from_file(filename: String) -> std::io::Result<String> {
     file
 }
 
+fn parse_optional_naive_datetime(value: &Value) -> Option<chrono::NaiveDateTime> {
+    let s = value.as_str()?;
+    match chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.f") {
+        Ok(dt) => Some(dt),
+        Err(e) => {
+            eprintln!("Unable to parse estimated_departure into DateTime: Chrono Parse Error: {e}");
+            None
+        }
+    }
+}
+
 pub fn get_live_update(
     dt: Option<chrono::NaiveDateTime>,
     callsign: Option<String>,
@@ -48,6 +59,8 @@ pub fn get_live_update(
         }
     };
 
+    let mut live_update = LiveUpdate::default();
+
     let data: Value = serde_json::from_str(&data)?;
 
     let status = match data["data"]["status"]["status"].clone() {
@@ -55,41 +68,15 @@ pub fn get_live_update(
         _ => None,
     };
 
-    dbg!(
-        &data["data"]["schedule"]["estimatedActualDeparture"]
-            .as_str()
-            .unwrap()
-    );
+    let estimated_departure =
+        parse_optional_naive_datetime(&data["data"]["schedule"]["estimatedActualDeparture"]);
+    let estimated_arrival =
+        parse_optional_naive_datetime(&data["data"]["schedule"]["estimatedActualArrival"]);
 
-    let time_fmt = "%Y-%m-%dT%H:%M:%S%.f";
-
-    let estimated_departure = match &data["data"]["schedule"]["estimatedActualDeparture"].as_str() {
-        Some(s) => match chrono::NaiveDateTime::parse_from_str(s, time_fmt) {
-            Ok(dt) => Some(dt),
-            Err(e) => {
-                eprintln!("Unable to parse estimated_departure into DateTime: {e}");
-                None
-            }
-        },
-        None => None,
-    };
-
-    let estimated_arrival = match &data["data"]["schedule"]["estimatedActualArrival"].as_str() {
-        Some(s) => match chrono::NaiveDateTime::parse_from_str(s, time_fmt) {
-            Ok(dt) => Some(dt),
-            Err(e) => {
-                eprintln!("Unable to parse estimated_arrival into DateTime: {e}");
-                None
-            }
-        },
-        None => None,
-    };
-
-    Ok(LiveUpdate {
-        status,
-        estimated_departure,
-        estimated_arrival,
-    })
+    live_update.status = status;
+    live_update.estimated_departure = estimated_departure;
+    live_update.estimated_arrival = estimated_arrival;
+    Ok(live_update)
 }
 // pub fn parse(data: String) -> anyhow::Result<FlightStats> {
 //     let data: serde_json::Value = serde_json::from_str(&data)?;

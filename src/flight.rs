@@ -14,6 +14,7 @@ pub struct Flight {
     pub status: Option<String>,
     pub estimated_departure: Option<chrono::NaiveDateTime>,
     pub estimated_arrival: Option<chrono::NaiveDateTime>,
+    pub errors: Vec<String>,
 }
 
 impl Flight {
@@ -21,6 +22,7 @@ impl Flight {
         self.status = lu.status;
         self.estimated_departure = lu.estimated_departure;
         self.estimated_arrival = lu.estimated_arrival;
+        self.errors = lu.errors;
     }
 }
 
@@ -53,4 +55,5 @@ pub struct LiveUpdate {
     pub status: Option<String>,
     pub estimated_departure: Option<NaiveDateTime>,
     pub estimated_arrival: Option<NaiveDateTime>,
+    pub errors: Vec<String>,
 }
