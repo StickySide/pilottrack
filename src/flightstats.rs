@@ -1,4 +1,5 @@
-use chrono::{ParseResult, prelude::*};
+use anyhow::Context;
+use chrono::prelude::*;
 
 use crate::flight::LiveUpdate;
 use serde_json::Value;
@@ -6,7 +7,7 @@ use serde_json::Value;
 #[allow(dead_code)]
 pub fn from_url(
     dt: chrono::NaiveDateTime,
-    flight_number: String,
+    flight_number: &String,
 ) -> Result<String, reqwest::Error> {
     let client = reqwest::blocking::Client::builder().build()?;
 
@@ -35,20 +36,9 @@ pub fn from_file(filename: String) -> std::io::Result<String> {
     file
 }
 
-fn parse_optional_naive_datetime(value: &Value) -> Option<chrono::NaiveDateTime> {
-    let s = value.as_str()?;
-    match chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.f") {
-        Ok(dt) => Some(dt),
-        Err(e) => {
-            eprintln!("Unable to parse estimated_departure into DateTime: Chrono Parse Error: {e}");
-            None
-        }
-    }
-}
-
 pub fn get_live_update(
     dt: Option<chrono::NaiveDateTime>,
-    callsign: Option<String>,
+    callsign: &Option<String>,
 ) -> anyhow::Result<LiveUpdate> {
     let data = match (dt, callsign) {
         (Some(dt), Some(callsign)) => from_url(dt, callsign)?,
@@ -59,25 +49,61 @@ pub fn get_live_update(
         }
     };
 
+    fn parse_optional_naive_datetime(value: &Value) -> anyhow::Result<chrono::NaiveDateTime> {
+        let s = value.as_str().ok_or(anyhow::anyhow!(
+            "Could not convert JSON time Value into str"
+        ))?;
+
+        chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.f")
+            .context("Could not parse string into NaiveDateTime")
+    }
+
     let mut live_update = LiveUpdate::default();
 
-    let data: Value = serde_json::from_str(&data)?;
+    let data: Value = match serde_json::from_str(&data) {
+        Ok(v) => v,
+        Err(e) => {
+            live_update.errors.push(format!(
+                "Could not parse raw JSON data into usable Value:{e}"
+            ));
+            return Ok(live_update);
+        }
+    };
 
     let status = match data["data"]["status"]["status"].clone() {
         Value::String(x) => Some(x),
         _ => None,
     };
 
-    let estimated_departure =
-        parse_optional_naive_datetime(&data["data"]["schedule"]["estimatedActualDeparture"]);
+    let estimated_departure = match parse_optional_naive_datetime(
+        &data["data"]["schedule"]["estimatedActualDeparture"],
+    ) {
+        Ok(dt) => Some(dt),
+        Err(e) => {
+            live_update
+                .errors
+                .push(format!("Could not parse estimated departure time: {e}"));
+            None
+        }
+    };
+
     let estimated_arrival =
-        parse_optional_naive_datetime(&data["data"]["schedule"]["estimatedActualArrival"]);
+        match parse_optional_naive_datetime(&data["data"]["schedule"]["estimatedActualArrival"]) {
+            Ok(dt) => Some(dt),
+            Err(e) => {
+                live_update
+                    .errors
+                    .push(format!("Could not parse estimated arrival time: {e}"));
+                None
+            }
+        };
 
     live_update.status = status;
     live_update.estimated_departure = estimated_departure;
     live_update.estimated_arrival = estimated_arrival;
     Ok(live_update)
 }
+
 // pub fn parse(data: String) -> anyhow::Result<FlightStats> {
 //     let data: serde_json::Value = serde_json::from_str(&data)?;
 

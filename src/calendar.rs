@@ -44,6 +44,7 @@ pub fn get_calendar_from_url(
     Ok(calendar)
 }
 
+#[allow(dead_code)]
 pub fn get_calendar_from_file(filename: &String) -> Result<Calendar> {
     let cal_string = std::fs::read_to_string(filename)?;
     let calendar: Calendar = cal_string
