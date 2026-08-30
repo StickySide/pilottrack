@@ -4,7 +4,6 @@ mod flight;
 mod flightstats;
 
 use anyhow::Result;
-use chrono::NaiveDateTime;
 
 fn main() -> Result<()> {
     let filename = String::from("calendar.ics");
@@ -16,9 +15,13 @@ fn main() -> Result<()> {
     let calendar =
         calendar::get_calendar_from_url(&config.url, &config.username, &config.password)?;
 
-    calendar::to_file(&calendar, &filename)?;
+    calendar::save_calendar_to_file(&calendar, &filename)?;
 
-    let flight = calendar::get_next_flight(&calendar);
+    let mut flight = calendar::get_next_flight(&calendar);
+    flight.live_update(flightstats::get_live_update(
+        flight.scheduled_departure,
+        flight.callsign(),
+    )?);
 
     println!("{flight}");
 

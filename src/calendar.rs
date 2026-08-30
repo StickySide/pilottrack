@@ -3,16 +3,23 @@ use anyhow::Result;
 use chrono::NaiveDateTime;
 use icalendar::{Calendar, CalendarDateTime, Component, DatePerhapsTime, Event};
 
+// Main function
 pub fn get_next_flight(cal: &Calendar) -> Flight {
     let event = get_next_event(&cal).unwrap();
-    let number = get_flight_number(&event);
+    let flight_number = get_flight_number(&event);
     // todo: need timezone info
     let scheduled_departure = get_start_ndt(event);
     let scheduled_arrival = get_end_ndt(event);
+    let arrival = get_arrival_airport(&event);
+    let departure = get_departure_airport(&event);
+
     Flight {
-        number,
+        flight_number: flight_number,
         scheduled_departure,
         scheduled_arrival,
+        departure,
+        arrival,
+        ..Flight::default()
     }
 }
 
@@ -37,7 +44,7 @@ pub fn get_calendar_from_url(
     Ok(calendar)
 }
 
-pub fn from_file(filename: &String) -> Result<Calendar> {
+pub fn get_calendar_from_file(filename: &String) -> Result<Calendar> {
     let cal_string = std::fs::read_to_string(filename)?;
     let calendar: Calendar = cal_string
         .parse()
@@ -79,6 +86,19 @@ pub fn get_end_ndt(event: &Event) -> Option<NaiveDateTime> {
         _ => None,
     }
 }
+
+fn get_arrival_airport(event: &Event) -> Option<String> {
+    let summary = event.get_summary()?;
+    let arrival = summary.split_whitespace().nth(5)?;
+    Some(String::from(arrival))
+}
+
+fn get_departure_airport(event: &Event) -> Option<String> {
+    let summary = event.get_summary()?;
+    let arrival = summary.split_whitespace().nth(1)?;
+    Some(String::from(arrival))
+}
+
 // todo: change return type to result or option
 fn is_complete(event: &Event) -> bool {
     let current_time = chrono::Utc::now();
@@ -90,7 +110,7 @@ fn is_complete(event: &Event) -> bool {
     current_time > end
 }
 
-pub fn to_file(calendar: &Calendar, filename: &String) -> std::io::Result<()> {
+pub fn save_calendar_to_file(calendar: &Calendar, filename: &String) -> std::io::Result<()> {
     std::fs::write(filename, calendar.to_string())
 }
 
@@ -135,7 +155,7 @@ mod tests {
 
     #[test]
     fn get_ndt() {
-        let calendar = from_file(&"tests/fixtures/calendar.ics".to_string()).unwrap();
+        let calendar = get_calendar_from_file(&"tests/fixtures/calendar.ics".to_string()).unwrap();
         let next_event = get_next_event(&calendar).unwrap();
         let dt = get_start_ndt(next_event).unwrap();
         let test_dt = chrono::NaiveDate::from_ymd_opt(2026, 08, 23)
@@ -147,7 +167,7 @@ mod tests {
 
     #[test]
     fn get_calendar_flight_times() {
-        let calendar = from_file(&"tests/fixtures/calendar.ics".to_string()).unwrap();
+        let calendar = get_calendar_from_file(&"tests/fixtures/calendar.ics".to_string()).unwrap();
         let next_event = get_next_event(&calendar).unwrap();
         let test_times = Some((
             chrono::NaiveDate::from_ymd_opt(2026, 08, 23)
@@ -165,5 +185,18 @@ mod tests {
             get_end_ndt(next_event).unwrap(),
         ));
         assert_eq!(times, test_times);
+    }
+
+    #[test]
+    fn get_airports() {
+        let event = icalendar::Event::new()
+            .summary("1234 EWR 08Sep 08:00 - SFO 08Sep 10:58")
+            .done();
+        let departure = get_departure_airport(&event);
+        let arrival = get_arrival_airport(&event);
+        assert_eq!(
+            (departure.unwrap(), arrival.unwrap()),
+            ("EWR".to_string(), "SFO".to_string())
+        )
     }
 }
