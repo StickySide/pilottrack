@@ -6,7 +6,7 @@ use serde_json::Value;
 
 #[allow(dead_code)]
 pub fn from_url(
-    dt: chrono::NaiveDateTime,
+    dt: &chrono::NaiveDateTime,
     flight_number: &String,
 ) -> Result<String, reqwest::Error> {
     let client = reqwest::blocking::Client::builder().build()?;
@@ -18,8 +18,6 @@ pub fn from_url(
         dt.month(),
         dt.day()
     );
-
-    dbg!(&url);
 
     let response = client
         .get(url)
@@ -37,10 +35,10 @@ pub fn from_file(filename: String) -> std::io::Result<String> {
 }
 
 pub fn get_live_update(
-    dt: Option<chrono::NaiveDateTime>,
+    departure_time: &Option<chrono::NaiveDateTime>,
     callsign: &Option<String>,
 ) -> anyhow::Result<LiveUpdate> {
-    let data = match (dt, callsign) {
+    let data = match (departure_time, callsign) {
         (Some(dt), Some(callsign)) => from_url(dt, callsign)?,
         _ => {
             return Err(anyhow::anyhow!(

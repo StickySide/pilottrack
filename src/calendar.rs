@@ -3,6 +3,7 @@ use anyhow::Result;
 use chrono::NaiveDateTime;
 use icalendar::{Calendar, CalendarDateTime, Component, DatePerhapsTime, Event};
 
+#[allow(dead_code)]
 // Main function
 pub fn get_next_flight(cal: &Calendar) -> Flight {
     let event = get_next_event(&cal).unwrap();
@@ -23,6 +24,7 @@ pub fn get_next_flight(cal: &Calendar) -> Flight {
     }
 }
 
+#[allow(dead_code)]
 pub fn get_calendar_from_url(
     url: &str,
     username: &str,
@@ -111,6 +113,7 @@ fn is_complete(event: &Event) -> bool {
     current_time > end
 }
 
+#[allow(dead_code)]
 pub fn save_calendar_to_file(calendar: &Calendar, filename: &String) -> std::io::Result<()> {
     std::fs::write(filename, calendar.to_string())
 }

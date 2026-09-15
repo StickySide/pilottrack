@@ -1,7 +1,8 @@
-use std::fmt::Display;
+// use std::fmt::Display;
 
 use chrono::NaiveDateTime;
 
+#[allow(dead_code)]
 #[derive(Debug, Default)]
 pub struct Flight {
     // This section is for calendar data
@@ -26,29 +27,29 @@ impl Flight {
     }
 }
 
-impl Display for Flight {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let u = String::from("Unavailable");
+// impl Display for Flight {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         let u = String::from("Unavailable");
 
-        write!(
-            f,
-            "Flight #: {}\nPlanned Route: {} -> {}\nScheduled departure: {}\nScheduled Arrival: {}\n\
-            Status: {}\nEstimated departure: {}\nEstimated arrival: {}",
-            self.flight_number.clone().unwrap_or(u.to_string()),
-            self.departure.clone().unwrap_or(u.to_owned()),
-            self.arrival.clone().unwrap_or(u.to_owned()),
-            self.scheduled_departure
-                .map_or(u.to_owned(), |d| d.to_string()),
-            self.scheduled_arrival
-                .map_or(u.to_owned(), |d| d.to_string()),
-            self.status.clone().unwrap_or(u.to_owned()),
-            self.estimated_departure
-                .map_or(u.to_owned(), |d| d.to_string()),
-            self.estimated_arrival
-                .map_or(u.to_owned(), |d| d.to_string()),
-        )
-    }
-}
+//         write!(
+//             f,
+//             "Flight #: {}\nPlanned Route: {} -> {}\nScheduled departure: {}\nScheduled Arrival: {}\n\
+//             Status: {}\nEstimated/Actual departure: {}\nEstimated/Actual arrival: {}",
+//             self.flight_number.clone().unwrap_or(u.to_string()),
+//             self.departure.clone().unwrap_or(u.to_owned()),
+//             self.arrival.clone().unwrap_or(u.to_owned()),
+//             self.scheduled_departure
+//                 .map_or(u.to_owned(), |d| d.to_string()),
+//             self.scheduled_arrival
+//                 .map_or(u.to_owned(), |d| d.to_string()),
+//             self.status.clone().unwrap_or(u.to_owned()),
+//             self.estimated_departure
+//                 .map_or(u.to_owned(), |d| d.to_string()),
+//             self.estimated_arrival
+//                 .map_or(u.to_owned(), |d| d.to_string()),
+//         )
+//     }
+// }
 
 #[derive(Debug, Default)]
 pub struct LiveUpdate {

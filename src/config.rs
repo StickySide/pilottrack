@@ -1,12 +1,14 @@
 use anyhow::{Context, Result};
 use std::env;
 
+#[allow(dead_code)]
 pub struct Config {
     pub username: String,
     pub password: String,
     pub url: String,
 }
 
+#[allow(dead_code)]
 impl Config {
     pub fn from_env() -> Result<Self> {
         dotenvy::dotenv().ok();
