@@ -38,8 +38,8 @@ fn main() -> Result<()> {
 
     let cli: Cli = Cli::parse();
 
-    // Run with live calendar
-    let flight = {
+    // Get flight from calendar or one-shot
+    let mut flight = {
         if cli.source.calendar == true {
             // Init config
             let config = config::Config::from_env()?;
@@ -53,12 +53,7 @@ fn main() -> Result<()> {
             calendar::save_calendar_to_file(&calendar, &filename)?;
 
             // Grab next flight from calendar
-            let mut flight = calendar::get_next_flight(&calendar);
-
-            // Update flight with live info
-            let live_update =
-                flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
-            flight.live_update(live_update);
+            let flight = calendar::get_next_flight(&calendar);
 
             flight
         } else {
@@ -72,19 +67,19 @@ fn main() -> Result<()> {
                 None => chrono::Local::now().naive_local(),
             };
 
-            // Create
             let mut flight = flight::Flight::default();
+            // Todo: Handle this unwrap
             flight.flight_number = Some(cli.source.flight_number.unwrap());
             flight.scheduled_departure = Some(departure_time);
-
-            flight.live_update(flightstats::get_live_update(
-                &flight.scheduled_departure,
-                &flight.flight_number,
-            )?);
             flight
         }
     };
 
+    // Update flight with live info
+
+    let live_update =
+        flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
+    flight.live_update(live_update);
     println!("{flight:#?}");
 
     Ok(())
