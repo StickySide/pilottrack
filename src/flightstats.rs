@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use anyhow::Context;
 use chrono::prelude::*;
 
@@ -12,7 +14,9 @@ pub fn from_url(
     dt: &chrono::NaiveDateTime,
     flight_number: &String,
 ) -> Result<String, reqwest::Error> {
-    let client = reqwest::blocking::Client::builder().build()?;
+    let client = reqwest::blocking::Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()?;
 
     let url = format!(
         "https://www.flightstats.com/v2/api-next/flight-tracker/UA/{}/{}/{}/{}",

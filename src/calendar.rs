@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::flight::Flight;
 use anyhow::Result;
 use chrono::NaiveDateTime;
@@ -30,7 +32,9 @@ pub fn get_calendar_from_url(
     username: &str,
     password: &str,
 ) -> Result<icalendar::Calendar> {
-    let client = reqwest::blocking::Client::builder().build()?;
+    let client = reqwest::blocking::Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()?;
 
     let response = client
         .get(url)
