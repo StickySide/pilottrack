@@ -1,7 +1,10 @@
 use anyhow::Context;
 use chrono::prelude::*;
 
-use crate::flight::LiveUpdate;
+use crate::flight::{
+    LiveUpdate,
+    TimeKind::{Actual, Estimated},
+};
 use serde_json::Value;
 
 #[allow(dead_code)]
@@ -122,11 +125,26 @@ pub fn get_live_update(
         _ => None,
     };
 
+    let departure_time_kind =
+        match data["data"]["schedule"]["estimatedActualDepartureTitle"].clone() {
+            Value::String(x) if x == "Actual" => Some(Actual),
+            Value::String(x) if x == "Estimated" => Some(Estimated),
+            _ => None,
+        };
+
+    let arrival_time_kind = match data["data"]["schedule"]["estimatedActualArrivalTitle"].clone() {
+        Value::String(x) if x == "Actual" => Some(Actual),
+        Value::String(x) if x == "Estimated" => Some(Estimated),
+        _ => None,
+    };
+
     live_update.status = status;
     live_update.delay_status = delay_status;
     live_update.departure_delay = departure_delay;
     live_update.arrival_delay = arrival_delay;
     live_update.estimated_departure = estimated_departure;
+    live_update.departure_time_kind = departure_time_kind;
+    live_update.arrival_time_kind = arrival_time_kind;
     live_update.estimated_arrival = estimated_arrival;
     live_update.departure_iata = departure_iata;
     live_update.arrival_aita = arrival_iata;

@@ -17,7 +17,9 @@ pub struct Flight {
     pub departure_delay: Option<u64>,
     pub arrival_delay: Option<u64>,
     pub estimated_departure: Option<chrono::NaiveDateTime>,
+    pub departure_time_kind: Option<TimeKind>,
     pub estimated_arrival: Option<chrono::NaiveDateTime>,
+    pub arrival_time_kind: Option<TimeKind>,
     pub errors: Vec<String>,
 }
 
@@ -28,7 +30,9 @@ impl Flight {
         self.departure_delay = lu.departure_delay;
         self.arrival_delay = lu.arrival_delay;
         self.estimated_departure = lu.estimated_departure;
+        self.departure_time_kind = lu.departure_time_kind;
         self.estimated_arrival = lu.estimated_arrival;
+        self.arrival_time_kind = lu.arrival_time_kind;
         self.errors = lu.errors;
 
         // Fill missing data with parsed data from flightstats
@@ -42,6 +46,12 @@ impl Flight {
     }
 }
 
+#[derive(Debug)]
+pub enum TimeKind {
+    Actual,
+    Estimated,
+}
+
 #[derive(Debug, Default)]
 pub struct LiveUpdate {
     pub status: Option<String>,
@@ -49,6 +59,8 @@ pub struct LiveUpdate {
     pub departure_delay: Option<u64>,
     pub arrival_delay: Option<u64>,
     pub estimated_departure: Option<NaiveDateTime>,
+    pub departure_time_kind: Option<TimeKind>,
+    pub arrival_time_kind: Option<TimeKind>,
     pub estimated_arrival: Option<NaiveDateTime>,
     pub departure_iata: Option<String>,
     pub arrival_aita: Option<String>,
