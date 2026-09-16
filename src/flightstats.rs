@@ -68,8 +68,24 @@ pub fn get_live_update(
         }
     };
 
+    // Todo: handle clone!
     let status = match data["data"]["status"]["status"].clone() {
         Value::String(x) => Some(x),
+        _ => None,
+    };
+
+    let delay_status = match data["data"]["status"]["delayStatus"]["wording"].clone() {
+        Value::String(x) => Some(x),
+        _ => None,
+    };
+
+    let departure_delay = match data["data"]["status"]["delay"]["departure"]["minutes"].clone() {
+        Value::Number(x) => x.as_u64(),
+        _ => None,
+    };
+
+    let arrival_delay = match data["data"]["status"]["delay"]["arrival"]["minutes"].clone() {
+        Value::Number(x) => x.as_u64(),
         _ => None,
     };
 
@@ -96,41 +112,24 @@ pub fn get_live_update(
             }
         };
 
+    let departure_iata = match data["data"]["departureAirport"]["iata"].clone() {
+        Value::String(x) => Some(x),
+        _ => None,
+    };
+
+    let arrival_iata = match data["data"]["arrivalAirport"]["iata"].clone() {
+        Value::String(x) => Some(x),
+        _ => None,
+    };
+
     live_update.status = status;
+    live_update.delay_status = delay_status;
+    live_update.departure_delay = departure_delay;
+    live_update.arrival_delay = arrival_delay;
     live_update.estimated_departure = estimated_departure;
     live_update.estimated_arrival = estimated_arrival;
+    live_update.departure_iata = departure_iata;
+    live_update.arrival_aita = arrival_iata;
+
     Ok(live_update)
 }
-
-// pub fn parse(data: String) -> anyhow::Result<FlightStats> {
-//     let data: serde_json::Value = serde_json::from_str(&data)?;
-
-//     let carrier_name: Option<String> = match data["data"]["resultHeader"]["carrier"]["name"].clone()
-//     {
-//         Value::String(x) => Some(x),
-//         _ => None,
-//     };
-
-//     let flight_number = match data["data"]["resultHeader"]["flightNumber"].clone() {
-//         Value::String(x) => Some(x),
-//         _ => None,
-//     };
-
-//     let status = match data["data"]["status"]["status"].clone() {
-//         Value::String(x) => Some(x),
-//         _ => None,
-//     };
-
-//     let error = match data["error"] {
-//         Value::Null => false,
-//         _ => true,
-//     };
-
-//     let stats = FlightStats {
-//         carrier_name,
-//         flight_number,
-//         status,
-//         error,
-//     };
-
-//     Ok(stats)

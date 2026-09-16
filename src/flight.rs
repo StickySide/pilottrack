@@ -13,6 +13,9 @@ pub struct Flight {
     pub scheduled_arrival: Option<chrono::NaiveDateTime>,
     // This section is for flight stats data
     pub status: Option<String>,
+    pub delay_status: Option<String>,
+    pub departure_delay: Option<u64>,
+    pub arrival_delay: Option<u64>,
     pub estimated_departure: Option<chrono::NaiveDateTime>,
     pub estimated_arrival: Option<chrono::NaiveDateTime>,
     pub errors: Vec<String>,
@@ -21,10 +24,35 @@ pub struct Flight {
 impl Flight {
     pub fn live_update(&mut self, lu: LiveUpdate) {
         self.status = lu.status;
+        self.delay_status = lu.delay_status;
+        self.departure_delay = lu.departure_delay;
+        self.arrival_delay = lu.arrival_delay;
         self.estimated_departure = lu.estimated_departure;
         self.estimated_arrival = lu.estimated_arrival;
         self.errors = lu.errors;
+
+        // Fill missing data with parsed data from flightstats
+        if let None = self.departure {
+            self.departure = lu.departure_iata
+        }
+
+        if let None = self.arrival {
+            self.arrival = lu.arrival_aita
+        }
     }
+}
+
+#[derive(Debug, Default)]
+pub struct LiveUpdate {
+    pub status: Option<String>,
+    pub delay_status: Option<String>,
+    pub departure_delay: Option<u64>,
+    pub arrival_delay: Option<u64>,
+    pub estimated_departure: Option<NaiveDateTime>,
+    pub estimated_arrival: Option<NaiveDateTime>,
+    pub departure_iata: Option<String>,
+    pub arrival_aita: Option<String>,
+    pub errors: Vec<String>,
 }
 
 // impl Display for Flight {
@@ -50,11 +78,3 @@ impl Flight {
 //         )
 //     }
 // }
-
-#[derive(Debug, Default)]
-pub struct LiveUpdate {
-    pub status: Option<String>,
-    pub estimated_departure: Option<NaiveDateTime>,
-    pub estimated_arrival: Option<NaiveDateTime>,
-    pub errors: Vec<String>,
-}
