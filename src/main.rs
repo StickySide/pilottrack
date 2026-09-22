@@ -5,8 +5,15 @@ mod flightstats;
 
 use anyhow::{Context, Result};
 use clap::{Args, Parser};
-use crossterm::event::{self, Event, KeyCode};
-use ratatui::{DefaultTerminal, Frame, style::Stylize, widgets::Paragraph};
+use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Alignment, Rect};
+use ratatui::widgets::Widget;
+use ratatui::{
+    DefaultTerminal, Frame,
+    style::Stylize,
+    widgets::{Block, Paragraph},
+};
 
 #[derive(Parser, Debug)]
 #[command(name = "PilotTrack")]
@@ -38,32 +45,64 @@ struct Source {
     flight_number: Option<String>,
 }
 
-// Main TUI loop
-fn run(terminal: &mut DefaultTerminal) -> Result<()> {
-    loop {
-        terminal.draw(render).context("failed to run ratatui app")?;
-        if quit()? {
-            break;
+#[derive(Debug, Default)]
+struct App {
+    quit: bool,
+    flight: flight::Flight,
+}
+
+// Ratatui App
+impl App {
+    pub fn run(&mut self, terminal: &mut DefaultTerminal) -> Result<()> {
+        while !self.quit {
+            terminal.draw(|frame| self.draw(frame))?;
+            self.handle_events()?;
+        }
+        Ok(())
+    }
+
+    fn draw(&self, frame: &mut Frame) {
+        frame.render_widget(self, frame.area());
+    }
+
+    fn handle_events(&mut self) -> Result<()> {
+        match event::read()? {
+            Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
+                self.handle_key_event(key_event)
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+
+    // Handle the different key inputs
+    fn handle_key_event(&mut self, key_event: KeyEvent) {
+        match key_event.code {
+            KeyCode::Char('q') => self.quit(),
+            _ => {}
         }
     }
-    Ok(())
+
+    fn quit(&mut self) {
+        self.quit = true
+    }
 }
 
-// Render everything here
-fn render(frame: &mut Frame) {
-    let greeting = Paragraph::new("Hello World!".bold());
-    frame.render_widget(greeting, frame.area());
-}
-
-fn quit() -> Result<bool> {
-    match event::read()? {
-        Event::Key(key_event) if key_event.code == KeyCode::Char('q') => Ok(true),
-        _ => Ok(false),
+impl Widget for &App {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        Paragraph::new("Welcome to PilotTrack")
+            .centered()
+            .render(area, buf);
     }
 }
 
 fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
+
+    if cli.ratatui == true {
+        let app_result = ratatui::run(|terminal| App::default().run(terminal));
+        return app_result;
+    }
 
     // Get flight from calendar or one-shot
     let mut flight = {
@@ -108,11 +147,6 @@ fn main() -> Result<()> {
         flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
     flight.live_update(live_update);
     println!("{flight:#?}");
-
-    // Run ratatui TUI
-    if cli.ratatui == true {
-        ratatui::run(run)?;
-    }
 
     Ok(())
 }
