@@ -8,6 +8,7 @@ use clap::{Args, Parser};
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::buffer::Buffer;
 use ratatui::layout::{Alignment, Rect};
+use ratatui::text::{Line, Span};
 use ratatui::widgets::Widget;
 use ratatui::{
     DefaultTerminal, Frame,
@@ -86,23 +87,58 @@ impl App {
     fn quit(&mut self) {
         self.quit = true
     }
+
+    fn flight_info(&self) -> Vec<Line> {
+        let not_available = "Not available";
+
+        let flight_number = match &self.flight.flight_number {
+            Some(number) => number,
+            None => not_available,
+        };
+
+        let departure = match &self.flight.departure {
+            Some(departure) => departure,
+            None => not_available,
+        };
+
+        let arrival = match &self.flight.arrival {
+            Some(departure) => departure,
+            None => not_available,
+        };
+
+        vec![
+            Line::from(vec!["Flight Number: ".bold(), flight_number.into()]),
+            Line::from(vec!["Departure: ".bold(), departure.into()]),
+            Line::from(vec!["Arrival: ".bold(), arrival.into()]),
+        ]
+    }
 }
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        Paragraph::new("Welcome to PilotTrack")
-            .centered()
-            .render(area, buf);
+        let title = Line::from("PilotTrack".bold());
+        let instructions = Line::from("<Q> to quit".blue());
+        let flight_info = self.flight_info();
+
+        let block = Block::bordered()
+            .title_top(title.centered())
+            .title_bottom(instructions.centered());
+
+        Paragraph::new(flight_info).block(block).render(area, buf);
+    }
+}
+
+impl From<flight::Flight> for App {
+    fn from(flight: flight::Flight) -> App {
+        App {
+            quit: false,
+            flight,
+        }
     }
 }
 
 fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
-
-    if cli.ratatui == true {
-        let app_result = ratatui::run(|terminal| App::default().run(terminal));
-        return app_result;
-    }
 
     // Get flight from calendar or one-shot
     let mut flight = {
@@ -147,6 +183,13 @@ fn main() -> Result<()> {
         flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
     flight.live_update(live_update);
     println!("{flight:#?}");
+
+    let mut app = App::from(flight);
+
+    if cli.ratatui == true {
+        let app_result = ratatui::run(|terminal| app.run(terminal));
+        return app_result;
+    }
 
     Ok(())
 }
