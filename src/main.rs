@@ -3,8 +3,10 @@ mod config;
 mod flight;
 mod flightstats;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::{Args, Parser};
+use crossterm::event::{self, Event, KeyCode};
+use ratatui::{DefaultTerminal, Frame, style::Stylize, widgets::Paragraph};
 
 #[derive(Parser, Debug)]
 #[command(name = "PilotTrack")]
@@ -19,6 +21,9 @@ struct Cli {
     /// Filename to use for saved calendar.
     #[arg(long, default_value_t = String::from("calendar.ics"))]
     filename: String,
+    /// Ratatui test run
+    #[arg(short, long)]
+    ratatui: bool,
 }
 
 #[derive(Args, Debug)]
@@ -33,9 +38,31 @@ struct Source {
     flight_number: Option<String>,
 }
 
-fn main() -> Result<()> {
-    // // Get .ics calendar from url
+// Main TUI loop
+fn run(terminal: &mut DefaultTerminal) -> Result<()> {
+    loop {
+        terminal.draw(render).context("failed to run ratatui app")?;
+        if quit()? {
+            break;
+        }
+    }
+    Ok(())
+}
 
+// Render everything here
+fn render(frame: &mut Frame) {
+    let greeting = Paragraph::new("Hello World!".bold());
+    frame.render_widget(greeting, frame.area());
+}
+
+fn quit() -> Result<bool> {
+    match event::read()? {
+        Event::Key(key_event) if key_event.code == KeyCode::Char('q') => Ok(true),
+        _ => Ok(false),
+    }
+}
+
+fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
 
     // Get flight from calendar or one-shot
@@ -81,6 +108,11 @@ fn main() -> Result<()> {
         flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
     flight.live_update(live_update);
     println!("{flight:#?}");
+
+    // Run ratatui TUI
+    if cli.ratatui == true {
+        ratatui::run(run)?;
+    }
 
     Ok(())
 }

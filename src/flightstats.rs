@@ -9,7 +9,6 @@ use crate::flight::{
 };
 use serde_json::Value;
 
-#[allow(dead_code)]
 pub fn from_url(
     dt: &chrono::NaiveDateTime,
     flight_number: &String,
@@ -35,10 +34,18 @@ pub fn from_url(
     Ok(response)
 }
 
-#[allow(dead_code)]
 pub fn from_file(filename: String) -> std::io::Result<String> {
     let file = std::fs::read_to_string(filename);
     file
+}
+
+fn parse_optional_naive_datetime(value: &Value) -> anyhow::Result<chrono::NaiveDateTime> {
+    let s = value.as_str().ok_or(anyhow::anyhow!(
+        "Could not convert JSON time Value into str"
+    ))?;
+
+    chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.f")
+        .context("Could not parse string into NaiveDateTime")
 }
 
 pub fn get_live_update(
@@ -54,15 +61,6 @@ pub fn get_live_update(
         }
     };
 
-    fn parse_optional_naive_datetime(value: &Value) -> anyhow::Result<chrono::NaiveDateTime> {
-        let s = value.as_str().ok_or(anyhow::anyhow!(
-            "Could not convert JSON time Value into str"
-        ))?;
-
-        chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%dT%H:%M:%S%.f")
-            .context("Could not parse string into NaiveDateTime")
-    }
-
     let mut live_update = LiveUpdate::default();
 
     let data: Value = match serde_json::from_str(&data) {
@@ -75,16 +73,11 @@ pub fn get_live_update(
         }
     };
 
-    // Todo: handle clone!
-    let status = match data["data"]["status"]["status"].clone() {
-        Value::String(x) => Some(x),
-        _ => None,
-    };
+    let status = data["data"]["status"]["status"].as_str().map(String::from);
 
-    let delay_status = match data["data"]["status"]["delayStatus"]["wording"].clone() {
-        Value::String(x) => Some(x),
-        _ => None,
-    };
+    let delay_status = data["data"]["status"]["delayStatus"]["wording"]
+        .as_str()
+        .map(String::from);
 
     let departure_delay = match data["data"]["status"]["delay"]["departure"]["minutes"].clone() {
         Value::Number(x) => x.as_u64(),
