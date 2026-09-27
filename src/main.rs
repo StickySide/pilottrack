@@ -3,18 +3,16 @@ mod config;
 mod flight;
 mod flightstats;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use clap::{Args, Parser};
+
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::buffer::Buffer;
-use ratatui::layout::{Alignment, Rect};
-use ratatui::text::{Line, Span};
-use ratatui::widgets::Widget;
-use ratatui::{
-    DefaultTerminal, Frame,
-    style::Stylize,
-    widgets::{Block, Paragraph},
-};
+use ratatui::layout::Rect;
+use ratatui::style::Stylize;
+use ratatui::text::Line;
+use ratatui::widgets::{Block, Paragraph, Widget};
+use ratatui::{DefaultTerminal, Frame};
 
 #[derive(Parser, Debug)]
 #[command(name = "PilotTrack")]
@@ -186,6 +184,7 @@ fn main() -> Result<()> {
 
     let mut app = App::from(flight);
 
+    // Ratatui option
     if cli.ratatui == true {
         let app_result = ratatui::run(|terminal| app.run(terminal));
         return app_result;
