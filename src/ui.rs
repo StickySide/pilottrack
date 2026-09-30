@@ -51,7 +51,7 @@ impl App {
         self.quit = true
     }
 
-    fn flight_info(&self) -> Vec<Line> {
+    fn flight_info(&self) -> Vec<Line<'_>> {
         let not_available = "Not available";
 
         let flight_number = match &self.flight.flight_number {
@@ -99,3 +99,9 @@ impl From<flight::Flight> for App {
         }
     }
 }
+
+// impl Default for App {
+//     fn default() -> Self {
+
+//     }
+// }
