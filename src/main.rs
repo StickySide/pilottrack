@@ -84,10 +84,7 @@ fn main() -> Result<()> {
     };
 
     // Update flight with live info
-
-    let live_update =
-        flightstats::get_live_update(&flight.scheduled_departure, &flight.flight_number)?;
-    flight.live_update(live_update);
+    flight.update()?;
     println!("{flight:#?}");
 
     Ok(())

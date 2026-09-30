@@ -14,6 +14,7 @@ use ratatui::{DefaultTerminal, Frame};
 pub struct App {
     quit: bool,
     flight: flight::Flight,
+    status: String,
 }
 
 // Ratatui App
@@ -96,6 +97,7 @@ impl From<flight::Flight> for App {
         App {
             quit: false,
             flight,
+            status: String::from(""),
         }
     }
 }

@@ -1,5 +1,6 @@
 // use std::fmt::Display;
 
+use crate::flightstats;
 use chrono::NaiveDateTime;
 
 #[allow(dead_code)]
@@ -44,6 +45,13 @@ impl Flight {
             self.arrival = lu.arrival_aita
         }
     }
+
+    pub fn update(&mut self) -> anyhow::Result<()> {
+        let live_update =
+            flightstats::get_live_update(&self.scheduled_departure, &self.flight_number)?;
+        self.live_update(live_update);
+        Ok(())
+    }
 }
 
 #[derive(Debug)]
@@ -66,7 +74,6 @@ pub struct LiveUpdate {
     pub arrival_aita: Option<String>,
     pub errors: Vec<String>,
 }
-
 // impl Display for Flight {
 //     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 //         let u = String::from("Unavailable");
