@@ -40,11 +40,6 @@ struct Source {
 fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
     let mut app = ui::App::default();
-    // Ratatui option
-    if cli.ratatui == true {
-        let app_result = ratatui::run(|terminal| app.run(terminal));
-        return app_result;
-    }
 
     // Get flight from calendar or one-shot
     let mut flight = {
@@ -82,6 +77,13 @@ fn main() -> Result<()> {
             flight
         }
     };
+
+    // Ratatui option
+    if cli.ratatui == true {
+        app.flight(flight);
+        let app_result = ratatui::run(|terminal| app.run(terminal));
+        return app_result;
+    }
 
     // Update flight with live info
     flight.update()?;

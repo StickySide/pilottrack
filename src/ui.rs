@@ -1,12 +1,15 @@
+use std::time::Duration;
+
 use crate::flight;
 
 use anyhow::Result;
 
+use chrono::Utc;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::style::Stylize;
-use ratatui::text::Line;
+use ratatui::text::{Line, ToText};
 use ratatui::widgets::{Block, Paragraph, Widget};
 use ratatui::{DefaultTerminal, Frame};
 
@@ -14,7 +17,8 @@ use ratatui::{DefaultTerminal, Frame};
 pub struct App {
     quit: bool,
     flight: flight::Flight,
-    status: String,
+    status: Option<String>,
+    last_updated: Option<chrono::DateTime<Utc>>,
 }
 
 // Ratatui App
@@ -23,8 +27,25 @@ impl App {
         while !self.quit {
             terminal.draw(|frame| self.draw(frame))?;
             self.handle_events()?;
+            match self.last_updated {
+                None => {
+                    self.flight.update()?;
+                    self.last_updated = Some(chrono::Utc::now());
+                }
+                Some(time) => {
+                    // Todo: Magic number for live flight update here...
+                    if chrono::Utc::now() - time > chrono::Duration::minutes(1) {
+                        self.flight.update()?;
+                        self.last_updated = Some(chrono::Utc::now());
+                    }
+                }
+            }
         }
         Ok(())
+    }
+
+    pub fn flight(&mut self, flight: flight::Flight) {
+        self.flight = flight;
     }
 
     fn draw(&self, frame: &mut Frame) {
@@ -32,12 +53,15 @@ impl App {
     }
 
     fn handle_events(&mut self) -> Result<()> {
-        match event::read()? {
-            Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
-                self.handle_key_event(key_event)
+        if event::poll(Duration::from_millis(1000))? {
+            match event::read()? {
+                Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
+                    self.handle_key_event(key_event)
+                }
+                _ => {}
             }
-            _ => {}
         }
+
         Ok(())
     }
 
@@ -83,12 +107,22 @@ impl Widget for &App {
         let title = Line::from("PilotTrack".bold());
         let instructions = Line::from("<Q> to quit".blue());
         let flight_info = self.flight_info();
+        let last_updated: Line<'_> = match self.last_updated {
+            None => Line::from("Never".to_owned()),
+            Some(time) => {
+                let time_since_update = chrono::Utc::now() - time;
+                Line::from(time_since_update.num_seconds().to_string())
+            }
+        };
 
         let block = Block::bordered()
             .title_top(title.centered())
             .title_bottom(instructions.centered());
 
         Paragraph::new(flight_info).block(block).render(area, buf);
+
+        // Todo: Explore layout blocks for this update line...
+        Paragraph::new(last_updated).render(area, buf);
     }
 }
 
@@ -97,7 +131,8 @@ impl From<flight::Flight> for App {
         App {
             quit: false,
             flight,
-            status: String::from(""),
+            status: None,
+            last_updated: None,
         }
     }
 }
