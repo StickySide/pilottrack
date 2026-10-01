@@ -7,8 +7,9 @@ use anyhow::Result;
 use chrono::Utc;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::buffer::Buffer;
-use ratatui::layout::Rect;
+use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::Stylize;
+use ratatui::symbols::merge::MergeStrategy;
 use ratatui::text::{Line, ToText};
 use ratatui::widgets::{Block, Paragraph, Widget};
 use ratatui::{DefaultTerminal, Frame};
@@ -115,14 +116,25 @@ impl Widget for &App {
             }
         };
 
-        let block = Block::bordered()
+        let layout = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![Constraint::Fill(1), Constraint::Max(3)])
+            .split(area);
+
+        let flight_block = Block::bordered()
             .title_top(title.centered())
             .title_bottom(instructions.centered());
 
-        Paragraph::new(flight_info).block(block).render(area, buf);
+        let update_block = Block::bordered().title_top(Line::from("Last Updated").centered());
 
-        // Todo: Explore layout blocks for this update line...
-        Paragraph::new(last_updated).render(area, buf);
+        Paragraph::new(flight_info)
+            .block(flight_block)
+            .render(layout[0], buf);
+
+        Paragraph::new(last_updated)
+            .centered()
+            .block(update_block)
+            .render(layout[1], buf);
     }
 }
 
